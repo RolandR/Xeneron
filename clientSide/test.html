@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+		<canvas id="srcCanvas" width="50" height="50"></canvas>
+		<canvas id="trgCanvas" width="500" height="500"></canvas>
+		<style>
+			canvas{
+				border: 1px #000000 solid;
+			}
+		</style>
+	</body>
+</html>
+
+<script type="text/javascript">
+	
+	var srcCanvas = document.getElementById('srcCanvas');
+	var srcContxt = srcCanvas.getContext('2d');
+	
+	var trgCanvas = document.getElementById('trgCanvas');
+	var trgContxt = trgCanvas.getContext('2d');
+	trgContxt.imageSmoothingEnabled = false;
+	trgContxt.mozImageSmoothingEnabled = false;
+	trgContxt.webkitImageSmoothingEnabled = false;
+	
+	srcContxt.beginPath();
+	srcContxt.moveTo(0, 0);
+	srcContxt.lineTo(100, 100);
+	srcContxt.strokeStyle = 'rgb(0, 0, 0)';
+	srcContxt.stroke();
+	srcContxt.closePath();
+	
+	trgContxt.scale(10, 10);
+	trgContxt.drawImage(
+		srcCanvas,
+		0,
+		0
+	);
+	
+</script>

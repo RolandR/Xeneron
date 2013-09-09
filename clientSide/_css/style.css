@@ -1,0 +1,25 @@
+*{
+	border: 0px;
+	margin: 0px;
+	padding: 0px;
+}
+
+body{
+	overflow: hidden;
+}
+
+#gameCanvas{
+	background-color: #000000;
+}
+
+#gaphicsResources{
+	visibility: hidden;
+}
+
+#preRenderCanvases{
+	/*visibility: hidden;*/
+}
+
+.shipPrerender{
+	background-color: #000000;
+}

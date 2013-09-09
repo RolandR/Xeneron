@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			Xeneron
+		</title>
+		
+		<link rel="stylesheet" type="text/css" href="./_css/style.css" /> 
+		
+		<script type="text/javascript" src="./_js/_libs/jquery-1.10.2.min.js"></script>
+		
+		<script type="text/javascript">
+			/*
+			*	Append script files after DOM is ready.
+			*	That didn't work out, the config would sometimes fail to load in time.
+			*
+			$(document).ready(function() {
+			
+				var scriptFiles = [
+					 './_js/clientConfig.js'
+					,'./_js/display.js'
+					,'./_js/xeneron.js'
+				];
+
+				for(var file in scriptFiles){
+					
+					var scriptTag   = document.createElement("script");
+					scriptTag.type  = "text/javascript";
+					scriptTag.src   = scriptFiles[file];
+					document.head.appendChild(scriptTag);
+				}
+			});
+			*/
+		</script>
+		
+		
+	</head>
+	<body>
+		<canvas id="gameCanvas">
+			You can't canvas!
+			You really should canvas.
+		</canvas>
+		<div id="gaphicsResources">
+			<img id="tilesetImg" src="./_media/tilesets/shipTileset.png" alt="" title="" />
+		</div>
+		<div id="preRenderCanvases"> <!-- Canvases? Canvii? Canvasarians! -->
+			<div id="shipCanvases">
+			</div>
+		</div>
+	</body>
+</html>
+
+<script type="text/javascript" src="./_js/clientConfig.js"></script>
+<script type="text/javascript" src="./_js/display.js"></script>
+<script type="text/javascript" src="./_js/xeneron.js"></script>
+
+

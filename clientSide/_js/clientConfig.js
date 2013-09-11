@@ -24,6 +24,12 @@ var Config = {
 			 partID: 20
 			,maxLevel: 0
 			,layer: 1
+			,specs: {
+				 baseThrust: 10000		// Level 0 Thrust in Newton
+				,thrustPerLevel: function(level){
+					return this.baseThrust * (level + 1);
+				}
+			}
 		}
 		,blaster: {
 			 partID: 30
@@ -34,5 +40,54 @@ var Config = {
 	,graphics: {
 		 scale: 1
 		,pixelPerMeter: 16
+		,bgLayerAmount: 3
+		,bgLayerModificator: [
+			 0.3
+			,0.8
+			,1
+		]
+	}
+	,keys:{
+		 accelerateForward: 	'w'
+		,accelerateLeft: 		'a'
+		,accelerateBack: 		's'
+		,accelerateRight: 		'd'
+		,rotateLeft: 			'q'
+		,rotateRight: 			'e'
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

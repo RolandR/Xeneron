@@ -14,11 +14,13 @@ var Display = new function(){
 	});
 
 	function canvasFillWindow(){
-		gameCanvas.width = $(window).width();
-		gameCanvas.height = $(window).height();
+		gameCanvas.width = $(window).width() + $('#backgroundImg0')[0].width * 2;
+		gameCanvas.height = $(window).height() + $('#backgroundImg0')[0].height * 2;
+		$(gameCanvas).css('left', 0 - $('#backgroundImg0')[0].width);
+		$(gameCanvas).css('top', 0 - $('#backgroundImg0')[0].height);
 	}
 	
-/*	shipPlan: {
+/*	ship: {
 			 width: 5
 			,height: 5
 			,parts: [
@@ -29,14 +31,14 @@ var Display = new function(){
 					,yPos: 3
 				}*/
 	
-	function prerenderShip(shipPlan){
-		var widthPx = shipPlan.width * Config.tileset.tileWidth;
-		var heightPx = shipPlan.height * Config.tileset.tileHeight;
+	function prerenderShip(ship){
+		var widthPx = ship.width * Config.tileset.tileWidth;
+		var heightPx = ship.height * Config.tileset.tileHeight;
 		
-		var shipCanvas = $('#ship-id-'+shipPlan.shipID)[0];
+		var shipCanvas = $('#ship-id-'+ship.shipID)[0];
 		if(shipCanvas == undefined){
 			shipCanvas = $('<canvas></canvas>');
-			shipCanvas.attr('id', 'ship-id-'+shipPlan.shipID);
+			shipCanvas.attr('id', 'ship-id-'+ship.shipID);
 			shipCanvas.addClass('shipPrerender');
 			$('#shipCanvases').append(shipCanvas);
 		}
@@ -53,18 +55,18 @@ var Display = new function(){
 		
 		
 		for(var i = 0; i < Config.partCfg.maxLayers; i++){
-			for(var part in shipPlan.parts){
-				if(shipPlan.parts[part].type.layer == i){
+			for(var part in ship.parts){
+				if(ship.parts[part].type.layer == i){
 					var orientation = 0;
-					if(typeof shipPlan.parts[part].orientation != 'undefined'){
-						orientation = shipPlan.parts[part].orientation * 90
+					if(typeof ship.parts[part].orientation != 'undefined'){
+						orientation = ship.parts[part].orientation * 90
 					}
 					
 					Tiles.renderTileToCanvas(
 						 shipCanvasContext
-						,shipPlan.parts[part].type.partID + shipPlan.parts[part].level
-						,{x: Config.tileset.tileWidth * shipPlan.parts[part].xPos
-						 ,y: Config.tileset.tileHeight * shipPlan.parts[part].yPos}
+						,ship.parts[part].type.partID + ship.parts[part].level
+						,{x: Config.tileset.tileWidth * ship.parts[part].xPos
+						 ,y: Config.tileset.tileHeight * ship.parts[part].yPos}
 						,orientation
 					);
 				}
@@ -145,11 +147,20 @@ var Display = new function(){
 		var backgroundCanvas = initBackground();
 	
 		function renderToGame(sourceCanvas, pos, rotation){
-			var halfSrcWidth = sourceCanvas.width;
-			var halfSrcHeight = sourceCanvas.height;
+			var halfSrcWidth = sourceCanvas.width / 2;
+			var halfSrcHeight = sourceCanvas.height / 2;
+			
+			if(pos == 'center'){
+				var centerPos = {x: 0, y: 0};
+				centerPos.x = gameCanvas.width / 2 - sourceCanvas.width / 2;
+				centerPos.y = gameCanvas.height / 2 - sourceCanvas.height / 2;
+				pos = centerPos;
+			}
+			
+			//console.log(pos);
 			
 			gameContext.save();
-			gameContext.translate(pos.x + halfSrcWidth, pos.y + halfSrcHeight);
+			gameContext.translate(pos.x - halfSrcWidth, pos.y - halfSrcHeight);
 			
 			gameContext.imageSmoothingEnabled = false; // I wonder why I have to do this here.
 			gameContext.mozImageSmoothingEnabled = false;
@@ -161,8 +172,8 @@ var Display = new function(){
 			
 			gameContext.drawImage(
 				sourceCanvas,
-				0 - halfSrcWidth / Config.graphics.scale, 
-				0 -	halfSrcHeight / Config.graphics.scale
+				(0 - halfSrcWidth) / Config.graphics.scale, 
+				(0 - halfSrcHeight) / Config.graphics.scale
 			);
 			
 			gameContext.restore();
@@ -170,7 +181,7 @@ var Display = new function(){
 		
 		function initBackground(){
 		
-			var backgroundCanvas = $('<canvas></canvas>');
+			/*var backgroundCanvas = $('<canvas></canvas>');
 			backgroundCanvas.attr('id', 'backgroundCanvas');
 			$('#preRenderCanvases').append(backgroundCanvas);
 			
@@ -182,7 +193,8 @@ var Display = new function(){
 			
 			var backgroundPattern = Tiles.renderTileToCanvas(backgroundContext, 100, {x: 0, y: 0}, 0);
 
-			return backgroundCanvas;
+			return backgroundCanvas;*/	
+			
 			
 		}
 		
@@ -190,22 +202,31 @@ var Display = new function(){
 			var halfGameWidth = gameCanvas.width / 2;
 			var halfGameHeight = gameCanvas.height / 2;
 			
-			var backgroundPattern = gameContext.createPattern(
-				backgroundCanvas,
-				"repeat"
-			);
-			gameContext.fillStyle = backgroundPattern;
-			gameContext.fillRect(
-				 0
-				,0
-				,gameCanvas.width
-				,gameCanvas.height
-			);
+			for(var i = 0; i < Config.graphics.bgLayerAmount; i++){
+				var backgroundSrc = $('#backgroundImg'+i)[0];
+				
+				var backgroundPattern = gameContext.createPattern(
+					backgroundSrc,
+					"repeat"
+				);
+				gameContext.fillStyle = backgroundPattern;
+				gameContext.save();
+				gameContext.translate(
+					 (centerPos.x * Config.graphics.bgLayerModificator[i]) % backgroundSrc.width
+					,(centerPos.y * Config.graphics.bgLayerModificator[i]) % backgroundSrc.height
+				);
+				gameContext.fillRect(
+					 0
+					,0
+					,gameCanvas.width
+					,gameCanvas.height
+				);
+				gameContext.restore();
+			}
 			
 		}
 		
 		function clear(){
-			console.log('clearing');
 			gameContext.setTransform(1, 0, 0, 1, 0, 0);
 			gameContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
 		}

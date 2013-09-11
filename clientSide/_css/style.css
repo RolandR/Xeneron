@@ -10,6 +10,9 @@ body{
 
 #gameCanvas{
 	background-color: #000000;
+	position: relative;
+	top: -50px;
+	left: -50px;
 }
 
 #gaphicsResources{
